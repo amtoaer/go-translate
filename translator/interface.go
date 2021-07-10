@@ -1,10 +1,14 @@
 package translator
 
+import (
+	"github.com/amtoaer/go-translate/config"
+	"github.com/amtoaer/go-translate/utils"
+)
+
 type Method uint8
 
 const (
 	BAIDU Method = iota
-	GOOGLE
 	NIU
 )
 
@@ -23,16 +27,20 @@ func (m *Mapper) checkLang(fromLang, toLang string) (string, string, bool) {
 }
 
 func NewTranslator(m Method) (t Translator) {
+	var token string
 	switch m {
 	case BAIDU:
-		return &baidu{}
-	case GOOGLE:
-		return &google{}
+		token = utils.CheckEmpty(config.GlobalConf.BaiduToken, config.BAIDU_DEFAULT_TOKEN)
+		return &baidu{token: token}
 	case NIU:
-		return &niu{Mapper: Mapper{map[string]string{
-			"zh": "zh",
-			"en": "en",
-		}}}
+		token = utils.CheckEmpty(config.GlobalConf.NiuToken, config.NIU_DEFAULT_TOKEN)
+		return &niu{
+			Mapper: Mapper{map[string]string{
+				"zh": "zh",
+				"en": "en",
+			}},
+			apiKey: token,
+		}
 	default:
 		return
 	}

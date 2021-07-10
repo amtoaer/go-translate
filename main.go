@@ -21,11 +21,13 @@ func main() {
 			switch os.Args[7] {
 			case "baidu":
 				method = translator.BAIDU
-			default:
+			case "niu":
 				method = translator.NIU
+			default:
+				method = translator.YOUDAO
 			}
 		} else {
-			method = translator.NIU
+			method = translator.YOUDAO
 		}
 		if err := config.InitConfig(); err != nil {
 			panic(err)

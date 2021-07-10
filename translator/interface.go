@@ -10,6 +10,7 @@ type Method uint8
 const (
 	BAIDU Method = iota
 	NIU
+	YOUDAO
 )
 
 type Translator interface {
@@ -27,21 +28,25 @@ func (m *Mapper) checkLang(fromLang, toLang string) (string, string, bool) {
 }
 
 func NewTranslator(m Method) (t Translator) {
-	var token string
 	switch m {
 	case BAIDU:
-		token = utils.CheckEmpty(config.GlobalConf.BaiduToken, config.BAIDU_DEFAULT_TOKEN)
-		return &baidu{token: token}
+		return &baidu{token: utils.CheckEmpty(config.GlobalConf.BaiduToken, config.BAIDU_DEFAULT_TOKEN)}
 	case NIU:
-		token = utils.CheckEmpty(config.GlobalConf.NiuToken, config.NIU_DEFAULT_TOKEN)
 		return &niu{
 			Mapper: Mapper{map[string]string{
 				"zh": "zh",
 				"en": "en",
 			}},
-			apiKey: token,
+			apiKey: utils.CheckEmpty(config.GlobalConf.NiuToken, config.NIU_DEFAULT_TOKEN),
 		}
 	default:
-		return
+		return &youdao{
+			id:     utils.CheckEmpty(config.GlobalConf.YoudaoID, config.YOUDAO_DEFAULT_ID),
+			secret: utils.CheckEmpty(config.GlobalConf.YoudaoSecret, config.YOUDAO_DEFAULT_SECRET),
+			Mapper: Mapper{map[string]string{
+				"zh": "zh-CHS",
+				"en": "en",
+			}},
+		}
 	}
 }

@@ -5,6 +5,7 @@
 *.so
 *.dylib
 main
+go-translate
 
 # Test binary, built with `go test -c`
 *.test

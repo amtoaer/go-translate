@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/amtoaer/go-translate/config"
 	"github.com/amtoaer/go-translate/translator"
 )
 
@@ -20,13 +21,14 @@ func main() {
 			switch os.Args[7] {
 			case "baidu":
 				method = translator.BAIDU
-			case "google":
-				method = translator.GOOGLE
 			default:
 				method = translator.NIU
 			}
 		} else {
 			method = translator.NIU
+		}
+		if err := config.InitConfig(); err != nil {
+			panic(err)
 		}
 		translator := translator.NewTranslator(method)
 		fmt.Println(translator.Translate(content, fromLang, toLang))

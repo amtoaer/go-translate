@@ -19,9 +19,9 @@ type Translator interface {
 
 type Mapper map[string]string
 
-func (m *Mapper) checkLang(fromLang, toLang string) (string, string, bool) {
-	validFromLang, isFromOk := (*m)[fromLang]
-	validToLang, isToOk := (*m)[toLang]
+func (m Mapper) checkLang(fromLang, toLang string) (string, string, bool) {
+	validFromLang, isFromOk := m[fromLang]
+	validToLang, isToOk := m[toLang]
 	return validFromLang, validToLang, isFromOk && isToOk
 }
 
